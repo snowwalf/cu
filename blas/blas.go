@@ -6,7 +6,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package cublas // import "gorgonia.org/cu/blas"
+package cublas // import "github.com/snowwalf/cu/blas"
 
 /*
 #cgo CFLAGS: -g -O3
@@ -3505,13 +3505,13 @@ func (impl *Standard) Sgemm(tA, tB blas.Transpose, m, n, k int, alpha float32, a
 	} else {
 		rowB, colB = n, k
 	}
-	if lda*(rowA-1)+colA > len(a) || lda < max(1, colA) {
+	if lda*(colA-1)+rowA > len(a) || lda < max(1, rowA) {
 		panic("blas: index of a out of range")
 	}
-	if ldb*(rowB-1)+colB > len(b) || ldb < max(1, colB) {
+	if ldb*(colB-1)+rowB > len(b) || ldb < max(1, rowB) {
 		panic("blas: index of b out of range")
 	}
-	if ldc*(m-1)+n > len(c) || ldc < max(1, n) {
+	if ldc*(n-1)+m > len(c) || ldc < max(1, m) {
 		panic("blas: index of c out of range")
 	}
 	impl.e = status(C.cublasSgemm(C.cublasHandle_t(impl.h), trans2cublasTrans(tA), trans2cublasTrans(tB), C.int(m), C.int(n), C.int(k), (*C.float)(&alpha), (*C.float)(&a[0]), C.int(lda), (*C.float)(&b[0]), C.int(ldb), (*C.float)(&beta), (*C.float)(&c[0]), C.int(ldc)))

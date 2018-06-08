@@ -136,6 +136,38 @@ func (ctx *Ctx) MemAlloc(bytesize int64) (dptr DevicePtr, err error) {
 	return
 }
 
+type MemHostAllocFlags byte
+
+const (
+	HostAllocPortable      MemHostAllocFlags = C.CU_MEMHOSTALLOC_PORTABLE
+	HostAllocDeviceMap     MemHostAllocFlags = C.CU_MEMHOSTALLOC_DEVICEMAP
+	HostAllocWriteCombined MemHostAllocFlags = C.CU_MEMHOSTALLOC_WRITECOMBINED
+)
+
+func (ctx *Ctx) MemHostAlloc(bytesize int64, flags MemHostAllocFlags) (prtHost unsafe.Pointer, err error) {
+	Cbytesize := C.size_t(bytesize)
+	Cflags := C.uint(flags)
+	f := func() error {
+		return result(C.cuMemHostAlloc(&prtHost, Cbytesize, Cflags))
+	}
+	if err = ctx.Do(f); err != nil {
+		err = errors.Wrap(err, "MemHostAlloc")
+	}
+	return
+}
+
+func (ctx *Ctx) MemHostGetDevicePointer(src unsafe.Pointer) (dptr DevicePtr, err error) {
+	var Cdptr C.CUdeviceptr
+	f := func() error {
+		return result(C.cuMemHostGetDevicePointer(&Cdptr, src, 0))
+	}
+	if err = ctx.Do(f); err != nil {
+		err = errors.Wrap(err, "MemHostGetDevicePointer")
+	}
+	dptr = DevicePtr(Cdptr)
+	return
+}
+
 func (ctx *Ctx) MemAllocPitch(WidthInBytes int64, Height int64, ElementSizeBytes uint) (dptr DevicePtr, pPitch int64, err error) {
 	CWidthInBytes := C.size_t(WidthInBytes)
 	CHeight := C.size_t(Height)

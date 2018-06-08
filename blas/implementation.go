@@ -6,7 +6,7 @@ import (
 	"runtime"
 
 	"github.com/gonum/blas"
-	"gorgonia.org/cu"
+	"github.com/snowwalf/cu"
 )
 
 var (

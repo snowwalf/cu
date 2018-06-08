@@ -14,7 +14,7 @@ var ctxFile string
 
 func init() {
 	gopath := os.Getenv("GOPATH")
-	pkgloc = path.Join(gopath, "src/gorgonia.org/cu")
+	pkgloc = path.Join(gopath, "src/github.com/snowwalf/cu")
 	apiFile = path.Join(pkgloc, "api.go")
 	ctxFile = path.Join(pkgloc, "ctx_api.go")
 }

@@ -7,7 +7,7 @@ import (
 	"unsafe"
 
 	"github.com/gonum/blas"
-	"gorgonia.org/cu"
+	"github.com/snowwalf/cu"
 )
 
 func TestMultihreadedCalls(t *testing.T) {
